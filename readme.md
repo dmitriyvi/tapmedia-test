@@ -8,4 +8,4 @@
 - функциональные тесты в папке Feature
     - файл ClickTest
 - unit тесты в папке Unit
-    - файл ClickTest
+    - файл UnitClickTest
