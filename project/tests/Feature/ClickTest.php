@@ -8,7 +8,7 @@ use App\Interfaces\Uuid\UuidGeneratorInterface;
 use Doctrine\ORM\EntityManager;
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class ClickTest extends TestCase
 {
     protected const CLASS_NAME_CLICK = Click::class;
 

@@ -12,7 +12,7 @@ use Tests\TestCase;
  * Class ExampleTest
  * @package Tests\Unit
  */
-class ExampleTest extends TestCase
+class ClickTest extends TestCase
 {
     public function testClick()
     {
