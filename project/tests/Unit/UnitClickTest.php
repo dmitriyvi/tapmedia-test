@@ -5,14 +5,13 @@ namespace Tests\Unit;
 use App\Entities\Click;
 use App\Interfaces\Click\ClickRepositoryInterface;
 use App\Interfaces\Uuid\UuidGeneratorInterface;
-use App\Services\Uuid\UuidGenerator;
 use Tests\TestCase;
 
 /**
  * Class ExampleTest
  * @package Tests\Unit
  */
-class ClickTest extends TestCase
+class UnitClickTest extends TestCase
 {
     public function testClick()
     {
