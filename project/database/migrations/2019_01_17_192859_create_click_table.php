@@ -22,6 +22,7 @@ class CreateClickTable extends Migration
             $table->string('param2');
             $table->integer('error');
             $table->integer('bad_domain');
+            $table->primary('id');
         });
     }
 

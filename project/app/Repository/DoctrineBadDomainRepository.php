@@ -37,4 +37,20 @@ class DoctrineBadDomainRepository implements BadDomainRepositoryInterface
             'name' => $name
         ]);
     }
+
+    /**
+     * @param string $id
+     * @param string $name
+     * @return BadDomain
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function create(string $id, string $name): BadDomain
+    {
+        $badDomain = new BadDomain($id, $name);
+        $this->em->persist($badDomain);
+        $this->em->flush();
+
+        return $badDomain;
+    }
 }

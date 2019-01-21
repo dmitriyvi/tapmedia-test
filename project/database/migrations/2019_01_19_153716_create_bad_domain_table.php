@@ -16,6 +16,7 @@ class CreateBadDomainTable extends Migration
         Schema::create('bad_domains', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('name');
+            $table->primary('id');
         });
     }
 

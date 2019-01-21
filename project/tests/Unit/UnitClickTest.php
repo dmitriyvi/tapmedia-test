@@ -4,87 +4,128 @@ namespace Tests\Unit;
 
 use App\Entities\Click;
 use App\Interfaces\Click\ClickRepositoryInterface;
-use App\Interfaces\Uuid\UuidGeneratorInterface;
 use Tests\TestCase;
 
 /**
- * Class ExampleTest
+ * Class UnitClickTest
  * @package Tests\Unit
  */
 class UnitClickTest extends TestCase
 {
-    public function testClick()
+    protected $clickRepository;
+    protected $uuidString = '14d742e4-5364-464d-81f1-47468d7d1212';
+    protected $userAgent = 'userAgent';
+    protected $ip = '127.0.0.1';
+    protected $referer = 'https://91919191919xxx.com/';
+    protected $param1 = '100';
+    protected $param2 = '100';
+    protected $badDomain = 0;
+
+    protected function setUp()
     {
-        $uuidGenerator = app(UuidGeneratorInterface::class);
-        $clickRepository = app(ClickRepositoryInterface::class);
+        parent::setUp();
 
-        $this->assertIsObject($uuidGenerator);
+        $this->clickRepository = app(ClickRepositoryInterface::class);
+    }
 
-        $uuid = $uuidGenerator->getUuid();
-
-        $this->assertObjectHasAttribute('string',$uuid);
-        $this->assertIsString($uuid->string);
-
-        $this->assertIsObject($clickRepository);
-
-        $uuidString = $uuid->string;
-        $userAgent = 'userAgent';
-        $ip = '127.0.0.1';
-        $referer = '127.0.0.2';
-        $param1 = '100';
-        $param2 = '100';
-        $badDomain = 0;
-
-
+    public function testCreateClick()
+    {
         // Test creating Click
-        $newClickEnity = $clickRepository->create(
-            $uuidString,
-            $userAgent,
-            $ip,
-            $referer,
-            $param1,
-            $param2,
-            $badDomain
+        $newClickEntity = $this->clickRepository->create(
+            $this->uuidString,
+            $this->userAgent,
+            $this->ip,
+            $this->referer,
+            $this->param1,
+            $this->param2,
+            $this->badDomain
         );
+        $this->assertInstanceOf(Click::class, $newClickEntity);
+    }
 
-        $this->assertInstanceOf(Click::class, $newClickEnity);
-
+    public function testFindAllClick()
+    {
         // Test findAll Click
-        $clickEntitiesAll = $clickRepository->findAll();
-
+        $clickEntitiesAll = $this->clickRepository->findAll();
         $this->assertIsArray($clickEntitiesAll);
+        $this->assertContainsOnlyInstancesOf(Click::class, $clickEntitiesAll);
+    }
 
+    public function testFindByOneClick()
+    {
         // Test findOneByData Click
-        $clickEntityExist = $clickRepository->findOneByData(
-            $userAgent,
-            $ip,
-            $referer,
-            $param1
+        $clickEntityExist = $this->clickRepository->findOneByData(
+            $this->userAgent,
+            $this->ip,
+            $this->referer,
+            $this->param1
         );
         $this->assertInstanceOf(Click::class, $clickEntityExist);
+    }
 
+    public function testFindByOneWithWrongDataClick()
+    {
         // Test findOneByData with wrong data
         $param1Wrong = 9999;
-        $clickEntityNotExist = $clickRepository->findOneByData(
-            $userAgent,
-            $ip,
-            $referer,
+        $clickEntityNotExist = $this->clickRepository->findOneByData(
+            $this->userAgent,
+            $this->ip,
+            $this->referer,
             $param1Wrong
         );
         $this->assertNull($clickEntityNotExist);
+    }
+
+    public function testIncrementErrorClick()
+    {
+        $clickEntityExist = $this->clickRepository->findOneByData(
+            $this->userAgent,
+            $this->ip,
+            $this->referer,
+            $this->param1
+        );
 
         // Test incrementError Click
         $oldErrorFieldValue = $clickEntityExist->getError();
-        $clickRepository->incrementError($clickEntityExist);
+        $this->clickRepository->incrementError($clickEntityExist);
         $newErrorFieldValue = $clickEntityExist->getError();
 
-        $this->assertNotEquals($oldErrorFieldValue,$newErrorFieldValue);
+        $this->assertNotEquals($oldErrorFieldValue, $newErrorFieldValue);
+    }
+
+    public function testSetBadDomainClick()
+    {
+        $clickEntityExist = $this->clickRepository->findOneByData(
+            $this->userAgent,
+            $this->ip,
+            $this->referer,
+            $this->param1
+        );
 
         // Test setBadDomain Click
         $oldBadDomainFieldValue = $clickEntityExist->getBadDomain();
-        $clickRepository->setBadDomain($clickEntityExist);
+        $this->clickRepository->setBadDomain($clickEntityExist);
         $newBadDomainFieldValue = $clickEntityExist->getBadDomain();
 
-        $this->assertNotEquals($oldBadDomainFieldValue,$newBadDomainFieldValue);
+        if ($oldBadDomainFieldValue == 0) {
+            $this->assertNotEquals($oldBadDomainFieldValue, $newBadDomainFieldValue);
+        } else {
+            $this->assertEquals($oldBadDomainFieldValue, $newBadDomainFieldValue);
+        }
+
+        $this->_removeClickEntity($clickEntityExist);
+    }
+
+    protected function _removeClickEntity(Click $clickEntity)
+    {
+        $this->clickRepository->remove($clickEntity);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        $this->clickRepository = null;
     }
 }
+

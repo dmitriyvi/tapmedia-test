@@ -41,6 +41,8 @@ class ClickTest extends TestCase
         $response->assertRedirect(\route('error', $newClickEnity->getId()));
         $response->assertStatus(302);
         $response->assertSessionHasAll(['redirect' => false]);
+
+        $this->_removeEntity($newClickEnity);
     }
 
     public function testBadDomainClick()
@@ -51,8 +53,8 @@ class ClickTest extends TestCase
         $uuid = $uuidGenerator->getUuid();
 
         $em = app(EntityManager::class);
-        $clickEnity = new BadDomain($uuid->string, $badDomdainExample);
-        $em->persist($clickEnity);
+        $newBadDomdain = new BadDomain($uuid->string, $badDomdainExample);
+        $em->persist($newBadDomdain);
         $em->flush();
 
         $param1 = rand();
@@ -68,5 +70,15 @@ class ClickTest extends TestCase
         $response->assertRedirect(\route('error', $newClickEnity->getId()));
         $response->assertStatus(302);
         $response->assertSessionHasAll(['redirect' => true]);
+
+        $this->_removeEntity($newBadDomdain);
+        $this->_removeEntity($newClickEnity);
+    }
+
+    protected function _removeEntity($entity)
+    {
+        $em = app(EntityManager::class);
+        $em->remove($entity);
+        $em->flush();
     }
 }

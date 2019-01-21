@@ -45,4 +45,9 @@ interface ClickRepositoryInterface
      * @param Click $clickEntity
      */
     public function setBadDomain(Click $clickEntity): void;
+
+    /**
+     * @param Click $clickEntity
+     */
+    public function remove(Click $clickEntity): void;
 }

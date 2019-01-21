@@ -98,5 +98,14 @@ class DoctrineClickRepository implements ClickRepositoryInterface
         $this->em->flush();
     }
 
-
+    /**
+     * @param Click $clickEntity
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(Click $clickEntity): void
+    {
+        $this->em->remove($clickEntity);
+        $this->em->flush();
+    }
 }
